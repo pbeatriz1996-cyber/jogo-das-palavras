@@ -45,12 +45,21 @@
       transform: scale(1.1);
     }
 
-    /* ===== Container dos cards ===== */
-    .container {
+    /* ===== Container principal ===== */
+    .container.flex-column {
       display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
+      flex-direction: column; /* vertical */
+      align-items: center;
+      gap: 20px; /* espaço entre botão e card */
+    }
+
+    /* ===== Resultado dos cards ===== */
+    #resultado {
+      display: flex;
+      flex-direction: column; /* empilha os cards verticalmente */
+      align-items: center;
       gap: 20px;
+      width: 100%;
     }
 
     /* ===== Card ===== */
@@ -76,24 +85,25 @@
       text-shadow: 2px 2px 8px rgba(0,0,0,0.4);
     }
 
-    /* ===== Palavras Proibidas ===== */
+    /* ===== Palavras Proibidas em coluna ===== */
     .proibidas {
       display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      justify-content: center;
+      flex-direction: column; /* coluna */
+      gap: 8px; /* espaço entre palavras proibidas */
+      align-items: center;
     }
 
     .proibida {
-      display: flex;
-      align-items: center;
-      background: rgba(255,255,255,0.2);
-      padding: 5px 10px;
-      border-radius: 8px;
-      font-size: 0.9rem;
-      gap: 5px;
-      transition: transform 0.2s ease;
-    }
+  display: flex;
+  align-items: center;
+  background: rgba(255,255,255,0.2);
+  padding: 5px 10px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  gap: 5px;
+  font-weight: 700; /* negrito */
+  transition: transform 0.2s ease;
+}
 
     .proibida:hover {
       transform: scale(1.1);
@@ -118,9 +128,8 @@
 
   <div class="container flex-column text-center">
     <button class="btn" onclick="sortearPalavra()">Sortear Palavra</button>
-    <div id="resultado" class="container"></div>
+    <div id="resultado"></div>
   </div>
-
 
 
 <script>
@@ -228,21 +237,22 @@
 {ID:99, Palavra:"Meia", Proibidas:["roupa","calcado","quente","vestir","perna"]},
 {ID:100, Palavra:"Sapato", Proibidas:["calcar","andar","couro","tecido","solado"]}
 ];
-function sortearPalavra() {
-      const indice = Math.floor(Math.random() * palavras.length);
-      const item = palavras[indice];
 
-      const div = document.getElementById("resultado");
-      div.innerHTML = `
-        <div class="card-custom">
-          <div class="palavra">${item.Palavra}</div>
-          <div class="proibidas">
-            ${item.Proibidas.map(p => `<div class="proibida"><span class="proibida-icon">🚫</span>${p}</div>`).join('')}
-          </div>
+  function sortearPalavra() {
+    const indice = Math.floor(Math.random() * palavras.length);
+    const item = palavras[indice];
+
+    const div = document.getElementById("resultado");
+    div.innerHTML = `
+      <div class="card-custom">
+        <div class="palavra">${item.Palavra}</div>
+        <div class="proibidas">
+          ${item.Proibidas.map(p => `<div class="proibida"><span class="proibida-icon">🚫</span>${p}</div>`).join('')}
         </div>
-      `;
-    }
-  </script>
+      </div>
+    `;
+  }
+</script>
 
 </body>
 </html>
