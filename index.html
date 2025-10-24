@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jogo Legal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    /* ===== Body ===== */
+    body {
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: 'Poppins', sans-serif;
+      color: #fff;
+      text-align: center;
+      background: linear-gradient(135deg, #B7CAFF, #EDC8F9, #FFBFEC);
+      background-size: 300% 300%;
+      animation: gradientAnim 15s ease infinite;
+    }
+
+    @keyframes gradientAnim {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    /* ===== Botão ===== */
+    .btn {
+      background: #ff6a00;
+      border: none;
+      padding: 12px 30px;
+      border-radius: 10px;
+      color: #fff;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-bottom: 20px;
+    }
+
+    .btn:hover {
+      background: #ff9a3c;
+      transform: scale(1.1);
+    }
+
+    /* ===== Container dos cards ===== */
+    .container {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    /* ===== Card ===== */
+    .card-custom {
+      background: linear-gradient(135deg, #7b2ff7, #c471f5);
+      border-radius: 15px;
+      padding: 25px 20px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      min-width: 250px;
+    }
+
+    .card-custom:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 15px 30px rgba(0,0,0,0.5);
+    }
+
+    /* ===== Palavra ===== */
+    .palavra {
+      font-size: 2rem;
+      font-weight: 600;
+      margin-bottom: 15px;
+      text-shadow: 2px 2px 8px rgba(0,0,0,0.4);
+    }
+
+    /* ===== Palavras Proibidas ===== */
+    .proibidas {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+    }
+
+    .proibida {
+      display: flex;
+      align-items: center;
+      background: rgba(255,255,255,0.2);
+      padding: 5px 10px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      gap: 5px;
+      transition: transform 0.2s ease;
+    }
+
+    .proibida:hover {
+      transform: scale(1.1);
+    }
+
+    .proibida-icon {
+      color: #ff4d4d;
+      font-weight: bold;
+    }
+
+    @media (max-width: 768px) {
+      .card-custom {
+        min-width: 200px;
+      }
+      .palavra {
+        font-size: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container flex-column text-center">
+    <button class="btn" onclick="sortearPalavra()">Sortear Palavra</button>
+    <div id="resultado" class="container"></div>
+  </div>
+
+
+
+<script>
+  // Dados diretamente no HTML
+  const palavras = [
+
+{ID:1, Palavra:"Nuvem", Proibidas:["ceu","chuva","branca","algodao","clima"]},
+{ID:2, Palavra:"Tatuagem", Proibidas:["pele","desenho","tinta","agulha","corpo"]},
+{ID:3, Palavra:"Chapeu", Proibidas:["cabeca","sol","acessorio","moda","protecao"]},
+{ID:4, Palavra:"Guarda-chuva", Proibidas:["chuva","abrir","molhado","protecao","tempo"]},
+{ID:5, Palavra:"Relogio", Proibidas:["tempo","pulso","ponteiros","digital","antigo"]},
+{ID:6, Palavra:"Caneta", Proibidas:["escrever","tinta","papel","azul","rabiscar"]},
+{ID:7, Palavra:"Livro", Proibidas:["leitura","paginas","historia","capa","estudo"]},
+{ID:8, Palavra:"Mochila", Proibidas:["carregar","costas","escola","viagem","bolso"]},
+{ID:9, Palavra:"Oculos", Proibidas:["visao","sol","lente","olhos","armacao"]},
+{ID:10, Palavra:"Computador", Proibidas:["teclado","tela","digital","processador","mouse"]},
+{ID:11, Palavra:"Mesa", Proibidas:["movel","jantar","madeira","colocar","escritorio"]},
+{ID:12, Palavra:"Cadeira", Proibidas:["sentar","movel","conforto","madeira","escritorio"]},
+{ID:13, Palavra:"Janela", Proibidas:["vidro","casa","abrir","vista","cortina"]},
+{ID:14, Palavra:"Porta", Proibidas:["abrir","fechar","casa","entrada","madeira"]},
+{ID:15, Palavra:"Tapete", Proibidas:["chao","casa","felpudo","decoracao","sala"]},
+{ID:16, Palavra:"Lampada", Proibidas:["luz","teto","acender","eletricidade","quarto"]},
+{ID:17, Palavra:"Abajur", Proibidas:["luz","quarto","mesa","noite","lampada"]},
+{ID:18, Palavra:"Telefone", Proibidas:["ligacao","celular","falar","som","contato"]},
+{ID:19, Palavra:"Carro", Proibidas:["dirigir","roda","motor","estrada","veiculo"]},
+{ID:20, Palavra:"Bicicleta", Proibidas:["pedalar","roda","exercicio","freio","guidao"]},
+{ID:21, Palavra:"Onibus", Proibidas:["transporte","coletivo","passageiro","cidade","linha"]},
+{ID:22, Palavra:"Aviao", Proibidas:["voar","aeroporto","viagem","piloto","assento"]},
+{ID:23, Palavra:"Barco", Proibidas:["agua","navegacao","mar","vela","remo"]},
+{ID:24, Palavra:"Balao", Proibidas:["festa","gas","colorido","encher","voar"]},
+{ID:25, Palavra:"Bola", Proibidas:["jogar","redonda","esporte","quicar","chute"]},
+{ID:26, Palavra:"Rede", Proibidas:["dormir","descanso","corda","varanda","balanco"]},
+{ID:27, Palavra:"Almofada", Proibidas:["sofa","descanso","macio","cama","travesseiro"]},
+{ID:28, Palavra:"Cama", Proibidas:["dormir","colchao","travesseiro","quarto","lencol"]},
+{ID:29, Palavra:"Cobertor", Proibidas:["frio","cama","aconchego","la","quente"]},
+{ID:30, Palavra:"Vela", Proibidas:["fogo","luz","aniversario","cera","aromatica"]},
+{ID:31, Palavra:"Chocolate", Proibidas:["doce","cacau","sobremesa","barra","doceiro"]},
+{ID:32, Palavra:"Sorvete", Proibidas:["frio","doce","verao","casquinha","gelado"]},
+{ID:33, Palavra:"Bolo", Proibidas:["aniversario","doce","festa","massa","cobertura"]},
+{ID:34, Palavra:"Pizza", Proibidas:["forno","massa","queijo","tomate","fatia"]},
+{ID:35, Palavra:"Cafe", Proibidas:["bebida","manha","quente","xicara","energia"]},
+{ID:36, Palavra:"Cha", Proibidas:["quente","erva","bebida","xicara","infusao"]},
+{ID:37, Palavra:"Suco", Proibidas:["fruta","copo","natural","liquido","beber"]},
+{ID:38, Palavra:"Agua", Proibidas:["beber","liquido","transparente","hidratar","copo"]},
+{ID:39, Palavra:"Leite", Proibidas:["vaca","liquido","cafe","beber","branco"]},
+{ID:40, Palavra:"Ovo", Proibidas:["galinha","cozinha","frito","quebrar","clara"]},
+{ID:41, Palavra:"Pao", Proibidas:["assado","cafe da manha","massa","forno","trigo"]},
+{ID:42, Palavra:"Queijo", Proibidas:["leite","prato","fatiado","prato","sabor"]},
+{ID:43, Palavra:"Manteiga", Proibidas:["pao","cozinha","derreter","cozinha","creme"]},
+{ID:44, Palavra:"Sal", Proibidas:["tempero","cozinha","comida","branco","salgado"]},
+{ID:45, Palavra:"Acucar", Proibidas:["doce","branco","cafe","sobremesa","cristal"]},
+{ID:46, Palavra:"Arroz", Proibidas:["comida","branco","cozido","feijao","prato"]},
+{ID:47, Palavra:"Feijao", Proibidas:["comida","prato","arroz","legume","cozido"]},
+{ID:48, Palavra:"Macarrao", Proibidas:["massa","comida","prato","italiano","cozinhar"]},
+{ID:49, Palavra:"Panqueca", Proibidas:["massa","doce","prato","recheio","cafe da manha"]},
+{ID:50, Palavra:"Sofa", Proibidas:["conforto","sentar","almofada","sala","estofado"]},
+{ID:51, Palavra:"Poltrona", Proibidas:["sentar","conforto","sala","apoio","braco"]},
+{ID:52, Palavra:"Escada", Proibidas:["subir","degrau","casa","andar","apoio"]},
+{ID:53, Palavra:"Elevador", Proibidas:["andar","predio","subir","descer","botao"]},
+{ID:54, Palavra:"Vaso", Proibidas:["planta","casa","decoracao","ceramica","flores"]},
+{ID:55, Palavra:"Flor", Proibidas:["colorida","petala","perfume","jardim","planta"]},
+{ID:56, Palavra:"Arvore", Proibidas:["tronco","folhas","natureza","grande","sombra"]},
+{ID:57, Palavra:"Grama", Proibidas:["verde","chao","jardim","cortar","natureza"]},
+{ID:58, Palavra:"Pedra", Proibidas:["chao","solida","rocha","pesada","pequena"]},
+{ID:59, Palavra:"Areia", Proibidas:["praia","sol","mar","chao","grao"]},
+{ID:60, Palavra:"Mar", Proibidas:["agua","praia","onda","sal","litoral"]},
+{ID:61, Palavra:"Rio", Proibidas:["agua","corrente","peixe","margens","ponte"]},
+{ID:62, Palavra:"Lago", Proibidas:["agua","calmo","peixe","margem","natureza"]},
+{ID:63, Palavra:"Cachoeira", Proibidas:["agua","queda","natureza","rio","salto"]},
+{ID:64, Palavra:"Montanha", Proibidas:["grande","subir","pedra","trilha","natureza"]},
+{ID:65, Palavra:"Colina", Proibidas:["pequena","subir","verde","natureza","paisagem"]},
+{ID:66, Palavra:"Sol", Proibidas:["calor","dia","ceu","estrela","luz"]},
+{ID:67, Palavra:"Lua", Proibidas:["noite","ceu","satelite","claro","crateras"]},
+{ID:68, Palavra:"Estrela", Proibidas:["ceu","noite","brilhar","luz","espaco"]},
+{ID:69, Palavra:"Planeta", Proibidas:["espaco","orbita","terra","sistema","astro"]},
+{ID:70, Palavra:"Galaxia", Proibidas:["espaco","estrelas","universo","planeta","constelacao"]},
+{ID:71, Palavra:"Computador-portatil", Proibidas:["laptop","teclado","digital","tela","processador"]},
+{ID:72, Palavra:"Mouse", Proibidas:["computador","clicar","dispositivo","informatica","mover"]},
+{ID:73, Palavra:"Teclado", Proibidas:["computador","digitar","teclas","dispositivo","digital"]},
+{ID:74, Palavra:"Monitor", Proibidas:["tela","computador","imagem","display","digital"]},
+{ID:75, Palavra:"Impressora", Proibidas:["papel","imprimir","tinta","maquina","oficina"]},
+{ID:76, Palavra:"Camera", Proibidas:["imagem","fotografar","lente","foto","capturar"]},
+{ID:77, Palavra:"Telefone-celular", Proibidas:["ligacao","mensagem","celular","smartphone","contato"]},
+{ID:78, Palavra:"Fone-ouvido", Proibidas:["som","musica","celular","escutar","audio"]},
+{ID:79, Palavra:"Almoco", Proibidas:["comida","refeicao","dia","restaurante","prato"]},
+{ID:80, Palavra:"Jantar", Proibidas:["comida","noite","refeicao","prato","familia"]},
+{ID:81, Palavra:"Cafe-da-manha", Proibidas:["comida","dia","cafe","leite","manha"]},
+{ID:82, Palavra:"Lanche", Proibidas:["rapido","comer","comida","pausa","tarde"]},
+{ID:83, Palavra:"Escova-dental", Proibidas:["dentes","higiene","pasta","boca","limpar"]},
+{ID:84, Palavra:"Shampoo", Proibidas:["cabelo","lavar","higiene","banheiro","pente"]},
+{ID:85, Palavra:"Condicionador", Proibidas:["cabelo","amaciar","lavar","higiene","cabelo"]},
+{ID:86, Palavra:"Sabonete", Proibidas:["higiene","banho","corpo","limpeza","pele"]},
+{ID:87, Palavra:"Toalha", Proibidas:["banho","secar","corpo","tecido","higiene"]},
+{ID:88, Palavra:"Chave", Proibidas:["porta","casa","abrir","fechar","objeto"]},
+{ID:89, Palavra:"Carteira", Proibidas:["dinheiro","documentos","bolsa","bolso","pessoal"]},
+{ID:90, Palavra:"Relogio-de-pulso", Proibidas:["tempo","pulso","ponteiros","digital","acessorio"]},
+{ID:91, Palavra:"Anel", Proibidas:["joia","dedo","ouro","prata","acessorio"]},
+{ID:92, Palavra:"Colar", Proibidas:["joia","pescoco","ouro","prata","acessorio"]},
+{ID:93, Palavra:"Brinco", Proibidas:["joia","orelha","prata","ouro","acessorio"]},
+{ID:94, Palavra:"Batom", Proibidas:["maquiagem","boca","cor","cosmetico","maquiagem"]},
+{ID:95, Palavra:"Sombra", Proibidas:["maquiagem","olho","cor","pincel","cosmetico"]},
+{ID:96, Palavra:"Blusa", Proibidas:["roupa","vestir","manga","tecido","camiseta"]},
+{ID:97, Palavra:"Calca", Proibidas:["roupa","vestir","perna","tecido","jeans"]},
+{ID:98, Palavra:"Casaco", Proibidas:["roupa","frio","inverno","vestir","tecido"]},
+{ID:99, Palavra:"Meia", Proibidas:["roupa","calcado","quente","vestir","perna"]},
+{ID:100, Palavra:"Sapato", Proibidas:["calcar","andar","couro","tecido","solado"]}
+];
+function sortearPalavra() {
+      const indice = Math.floor(Math.random() * palavras.length);
+      const item = palavras[indice];
+
+      const div = document.getElementById("resultado");
+      div.innerHTML = `
+        <div class="card-custom">
+          <div class="palavra">${item.Palavra}</div>
+          <div class="proibidas">
+            ${item.Proibidas.map(p => `<div class="proibida"><span class="proibida-icon">🚫</span>${p}</div>`).join('')}
+          </div>
+        </div>
+      `;
+    }
+  </script>
+
+</body>
+</html>
